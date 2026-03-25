@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 import { useAuth } from "../hooks/useAuth";
 
 function EyeOpenIcon() {
@@ -57,7 +59,9 @@ export default function Login() {
     } catch (err: unknown) {
       if (err && typeof err === "object" && "response" in err) {
         const axiosErr = err as { response?: { data?: { message?: string } } };
-        setError(axiosErr.response?.data?.message ?? "Credenciales incorrectas");
+        setError(
+          axiosErr.response?.data?.message ?? "Credenciales incorrectas",
+        );
       } else {
         setError("Error de conexión. Intenta nuevamente.");
       }
@@ -67,31 +71,31 @@ export default function Login() {
   return (
     <div className="fixed inset-0 z-50 flex bg-white">
       {/* ── Left brand panel (desktop only) ── */}
-      <div className="hidden lg:flex lg:w-[45%] flex-col justify-between p-12 bg-gradient-to-br from-[#6b10e8] via-[#aa3bff] to-[#c084fc] text-white select-none">
-        <span className="text-xl font-bold tracking-tight">C21 Admin</span>
+      <div className="hidden lg:flex lg:w-[45%] flex-col justify-between p-12 bg-gradient-to-br from-[#c2410c] via-[#f97316] to-[#fb923c] text-white select-none">
+        <span className="text-xl font-bold tracking-tight">Admin</span>
 
         <div className="space-y-5">
           <div className="w-12 h-1 rounded-full bg-white/40" />
           <h1 className="text-4xl font-bold leading-tight tracking-tight">
             Gestiona tus propiedades en un solo lugar.
           </h1>
-          <p className="text-purple-100 text-base leading-relaxed max-w-sm">
+          <p className="text-orange-100 text-base leading-relaxed max-w-sm">
             Accede a tu panel para administrar propiedades, leads y agentes de
             forma eficiente.
           </p>
         </div>
 
-        <p className="text-purple-300 text-sm">
-          Century 21 · Panel de administración
+        <p className="text-orange-200 text-sm">
+          Agentes Inmobiliarios · Panel de administración
         </p>
       </div>
 
       {/* ── Right form panel ── */}
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-white">
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-sm shadow-md rounded-2xl p-12">
           {/* Mobile logo */}
           <div className="lg:hidden mb-8">
-            <span className="text-2xl font-bold text-[#aa3bff]">C21 Admin</span>
+            <span className="text-2xl font-bold text-[#f97316]">C21 Admin</span>
           </div>
 
           <h2 className="text-2xl font-bold text-gray-900 mb-1">
@@ -102,57 +106,37 @@ export default function Login() {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
-            <div className="space-y-1.5">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="tu@email.com"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 placeholder-gray-400 bg-white transition-[border-color,box-shadow] focus:outline-none focus:ring-2 focus:ring-[#aa3bff]/30 focus:border-[#aa3bff]"
-              />
-            </div>
+            <Input
+              label="Email"
+              id="email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="tu@email.com"
+            />
 
-            {/* Password */}
-            <div className="space-y-1.5">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Contraseña
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="••••••••"
-                  className="w-full px-3.5 py-2.5 pr-10 rounded-lg border border-gray-300 text-sm text-gray-900 placeholder-gray-400 bg-white transition-[border-color,box-shadow] focus:outline-none focus:ring-2 focus:ring-[#aa3bff]/30 focus:border-[#aa3bff]"
-                />
+            <Input
+              label="Contraseña"
+              id="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              suffix={
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
                   aria-label={
                     showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
                   }
                 >
                   {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
                 </button>
-              </div>
-            </div>
+              }
+            />
 
             {/* Error message */}
             {error && (
@@ -172,36 +156,7 @@ export default function Login() {
               </div>
             )}
 
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-[#aa3bff] hover:bg-[#9428e8] active:bg-[#7c10e0] disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[#aa3bff]/50 focus:ring-offset-2"
-            >
-              {isLoading && (
-                <svg
-                  className="animate-spin w-4 h-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                  />
-                </svg>
-              )}
-              {isLoading ? "Ingresando..." : "Ingresar"}
-            </button>
+            <Button label="Ingresar" loading={isLoading} className="w-full" />
           </form>
         </div>
       </div>
