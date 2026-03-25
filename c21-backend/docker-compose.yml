@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: c21-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: c21
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - c21_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  c21_postgres_data:

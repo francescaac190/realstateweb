@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated" 
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -15,90 +8,198 @@ datasource db {
 
 model Role {
   id    Int    @id @default(autoincrement())
-  code  String @unique  // "ADMIN, AGENT"
-  name  String          // "Administrador, Agente"
+  code  String @unique
+  name  String
   users User[]
 }
 
+model City {
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  branches   Branch[]
+  properties Property[]
+  users      User[]
+  zones      Zone[]
+}
+
+model Zone {
+  id         Int        @id @default(autoincrement())
+  name       String
+  cityId     Int
+  properties Property[]
+  city       City       @relation(fields: [cityId], references: [id])
+
+  @@unique([cityId, name])
+}
+
+model Branch {
+  id      Int     @id @default(autoincrement())
+  name    String
+  address String?
+  phone   String?
+  cityId  Int?
+  city    City?   @relation(fields: [cityId], references: [id])
+  users   User[]
+}
+
+model User {
+  id             String              @id @default(uuid())
+  email          String              @unique
+  roleId         Int
+  createdAt      DateTime            @default(now())
+  address        String?
+  branchId       Int?
+  cityId         Int?
+  documentNumber String?             @unique
+  firstName      String
+  hireDate       DateTime?
+  isVerified     Boolean             @default(false)
+  lastName       String
+  passwordHash   String
+  phone          String?
+  status         UserStatus          @default(ACTIVE)
+  updatedAt      DateTime            @updatedAt
+  username       String              @unique
+  verifiedAt     DateTime?
+  awards         Award[]
+  contacts       Contact[]
+  properties     Property[]
+  refreshTokens  RefreshToken[]
+  branch         Branch?             @relation(fields: [branchId], references: [id])
+  city           City?               @relation(fields: [cityId], references: [id])
+  role           Role                @relation(fields: [roleId], references: [id])
+  socialAccounts UserSocialAccount[]
+}
+
+model UserSocialAccount {
+  id         String         @id @default(uuid())
+  userId     String
+  provider   SocialProvider
+  handle     String
+  isVerified Boolean        @default(false)
+  verifiedAt DateTime?
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+}
+
 model Currency {
-  id    Int    @id @default(autoincrement())
-  code  String @unique  // "USD, BOB"
-  name  String          // "Dólar estadounidense, Boliviano"
+  id         Int        @id @default(autoincrement())
+  code       String     @unique
+  name       String
   properties Property[]
 }
 
 model PropertyType {
-  id    Int    @id @default(autoincrement())
-  code  String @unique  // "HOUSE, APARTMENT, LAND"
-  name  String          // "Casa, Departamento, Terreno"
+  id         Int        @id @default(autoincrement())
+  code       String     @unique
+  name       String
   properties Property[]
 }
 
 model PropertyStatus {
-  id    Int    @id @default(autoincrement())
-  code  String @unique  // "AVAILABLE, RESERVED, SOLD"
-  name  String          // "Disponible, Reservado, Vendido"
+  id         Int        @id @default(autoincrement())
+  code       String     @unique
+  name       String
   properties Property[]
 }
 
-model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  roleId    Int
-  role      Role     @relation(fields: [roleId], references: [id])
-  createdAt DateTime @default(now())
-}
-
 model Property {
-  id          String   @id @default(uuid())
+  id          String          @id @default(uuid())
   title       String
   description String?
-  price       Int
-  currencyId  Int
-  currency    Currency @relation(fields: [currencyId], references: [id])
-  typeId      Int
-  type        PropertyType @relation(fields: [typeId], references: [id])
-  statusId    Int
-  status      PropertyStatus @relation(fields: [statusId], references: [id])
-  city        String
-  zone        String?
+  currencyId  Int?
+  typeId      Int?
+  statusId    Int?
   address     String?
   lat         Float?
   lng         Float?
-
   bedrooms    Int?
   bathrooms   Int?
   parking     Int?
-  builtM2     Float?
-  landM2      Float?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  agentId     String?
+  areaM2      Decimal?        @db.Decimal(12, 2)
+  builtAreaM2 Decimal?        @db.Decimal(12, 2)
+  cityId      Int?
+  depthM2     Decimal?        @db.Decimal(12, 2)
+  frontM2     Decimal?        @db.Decimal(12, 2)
+  isDraft     Boolean         @default(false)
+  pricePerM2  Decimal?        @db.Decimal(12, 2)
+  suites      Int?
+  totalPrice  Decimal?        @db.Decimal(12, 2)
+  zoneId      Int?
+  agent       User?           @relation(fields: [agentId], references: [id])
+  city        City?           @relation(fields: [cityId], references: [id])
+  currency    Currency?       @relation(fields: [currencyId], references: [id])
+  status      PropertyStatus? @relation(fields: [statusId], references: [id])
+  type        PropertyType?   @relation(fields: [typeId], references: [id])
+  zone        Zone?           @relation(fields: [zoneId], references: [id])
+  media       PropertyMedia[]
 
-  featured    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  images      PropertyImage[]
-  leads       Lead[]
+  @@index([cityId])
+  @@index([statusId])
+  @@index([typeId])
+  @@index([agentId])
 }
 
-model PropertyImage {
-  id         String   @id @default(uuid())
-  url        String
-  order      Int      @default(0)
+model PropertyMedia {
+  id         String            @id @default(uuid())
   propertyId String
-  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  type       PropertyMediaType
+  url        String
+  order      Int               @default(0)
+  createdAt  DateTime          @default(now())
+  property   Property          @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
-model Lead {
-  id         String   @id @default(uuid())
-  name       String
-  phone      String?
-  email      String?
-  message    String?
-  source     String   @default("WEB")
-  createdAt  DateTime @default(now())
+model Contact {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  phone     String?
+  email     String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  propertyId String?
-  property   Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+model Award {
+  id         String   @id @default(uuid())
+  userId     String
+  name       String
+  receivedAt DateTime
+  imageUrl   String?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum SocialProvider {
+  WHATSAPP
+  FACEBOOK
+  INSTAGRAM
+  TIKTOK
+}
+
+enum PropertyMediaType {
+  IMAGE
+  VIDEO
 }

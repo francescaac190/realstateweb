@@ -1,0 +1,32 @@
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Login from "../pages/Login";
+import PrivateRoute from "./PrivateRoute";
+import AppLayout from "../../components/AppLayout";
+import PropertiesList from "../../features/properties/pages/PropertiesList";
+
+// TODO: replace with your real page components
+function Dashboard() {
+  return <div className="p-6">Dashboard</div>;
+}
+
+export default function AppRouter() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Public */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected — wrapped in the drawer layout */}
+        <Route element={<PrivateRoute />}>
+          <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/properties" element={<PropertiesList />} />
+          </Route>
+        </Route>
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
