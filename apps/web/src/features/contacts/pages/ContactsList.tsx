@@ -6,7 +6,7 @@ export default function ContactsList() {
   const { data: contacts, isLoading, error } = useContacts();
 
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-6xl mx-auto">
       <h2 className="text-xl font-semibold text-gray-900 mb-6 text-left">
         Contactos
       </h2>
