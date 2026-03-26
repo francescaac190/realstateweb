@@ -78,9 +78,9 @@ function IconLogout() {
 // ── Nav items ──────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { label: "Dashboard", to: "/dashboard", Icon: IconDashboard },
-  { label: "Propiedades", to: "/properties", Icon: IconProperties },
-  { label: "Contactos", to: "/contacts", Icon: IconLeads },
+  { label: "Dashboard", to: "/admin/dashboard", Icon: IconDashboard },
+  { label: "Propiedades", to: "/admin/properties", Icon: IconProperties },
+  { label: "Contactos", to: "/admin/contacts", Icon: IconLeads },
 ];
 
 // ── Component ──────────────────────────────────────────────────────────────

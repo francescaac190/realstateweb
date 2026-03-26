@@ -55,7 +55,7 @@ export default function Login() {
 
     try {
       await login(email, password);
-      navigate("/dashboard");
+      navigate("/admin/dashboard");
     } catch (err: unknown) {
       if (err && typeof err === "object" && "response" in err) {
         const axiosErr = err as { response?: { data?: { message?: string } } };

@@ -5,25 +5,39 @@ import AppLayout from "../../components/AppLayout";
 import Dashboard from "../../features/dashboard/pages/Dashboard";
 import PropertiesList from "../../features/properties/pages/PropertiesList";
 import ContactsList from "../../features/contacts/pages/ContactsList";
+import PublicLayout from "../../public/layout/PublicLayout";
+import HomePage from "../../public/pages/HomePage";
+import PropertiesSearchPage from "../../public/pages/PropertiesSearchPage";
+import PropertyDetailPage from "../../public/pages/PropertyDetailPage";
+import AgentsPage from "../../public/pages/AgentsPage";
+import AgentListingsPage from "../../public/pages/AgentListingsPage";
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public */}
+        {/* Standalone public page (no layout) */}
         <Route path="/login" element={<Login />} />
 
-        {/* Protected — wrapped in the drawer layout */}
+        {/* Public site — wrapped in PublicLayout */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/properties" element={<PropertiesSearchPage />} />
+          <Route path="/properties/:id" element={<PropertyDetailPage />} />
+          <Route path="/agents" element={<AgentsPage />} />
+          <Route path="/agents/:id" element={<AgentListingsPage />} />
+        </Route>
+
+        {/* Admin — protected */}
         <Route element={<PrivateRoute />}>
           <Route element={<AppLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/properties" element={<PropertiesList />} />
-            <Route path="/contacts" element={<ContactsList />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/properties" element={<PropertiesList />} />
+            <Route path="/admin/contacts" element={<ContactsList />} />
           </Route>
         </Route>
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
