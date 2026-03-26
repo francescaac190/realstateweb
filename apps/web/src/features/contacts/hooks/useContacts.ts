@@ -18,6 +18,8 @@ export function useContacts() {
   useEffect(() => {
     let cancelled = false;
 
+    setState((s) => ({ ...s, isLoading: true, error: null }));
+
     contactsService
       .getAll()
       .then((data) => {

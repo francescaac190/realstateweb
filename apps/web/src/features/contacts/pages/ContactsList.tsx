@@ -1,4 +1,3 @@
-import React from "react";
 import { useContacts } from "../hooks/useContacts";
 import { ContactCard } from "../components/ContactCard";
 
