@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserStatus } from '@prisma/client';
 import * as userService from './user.service';
+import * as propertyService from '../properties/property.service';
 
 function toNumber(value: unknown) {
   const parsed = Number(value);
@@ -93,6 +94,22 @@ export async function getProfile(
     }
     const user = await userService.getUserById(userId);
     res.status(200).json(user);
+  } catch (err) {
+    next(err as Error);
+  }
+}
+
+export async function getAgentProperties(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const properties = await propertyService.listProperties({
+      agentId: req.params.id,
+      isDraft: false,
+    });
+    res.status(200).json(properties);
   } catch (err) {
     next(err as Error);
   }

@@ -1,10 +1,13 @@
 import { Router } from 'express';
-import { authMiddleware } from '../../middlewares/auth.middleware';
+import { authMiddleware, optionalAuthMiddleware } from '../../middlewares/auth.middleware';
 import { validateBody } from '../../middlewares/validate.middleware';
 import * as userController from './user.controller';
 import { createUserSchema, updateUserSchema } from './user.schemas';
 
 const router = Router();
+
+// Public — no auth required
+router.get('/:id/properties', optionalAuthMiddleware, userController.getAgentProperties);
 
 router.use(authMiddleware);
 

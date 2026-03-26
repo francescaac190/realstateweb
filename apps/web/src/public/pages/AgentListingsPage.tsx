@@ -1,17 +1,27 @@
 import { useParams, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { PropertyCard, PropertyCardSkeleton } from '../../features/properties/components/PropertyCard';
 import ContactButtons from '../components/ContactButtons';
 import { usePublicAgent } from '../hooks/usePublicAgents';
-import { usePublicProperties } from '../hooks/usePublicProperties';
+import { publicAgentsService } from '../services/publicAgents.service';
+import type { Property } from '../../features/properties/types/property.types';
 
 export default function AgentListingsPage() {
   const { id } = useParams<{ id: string }>();
 
   const { data: agent, isLoading: agentLoading } = usePublicAgent(id ?? '');
-  const { data: properties, isLoading: propsLoading } = usePublicProperties({
-    agentId: id,
-    isDraft: false,
-  });
+
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [propsLoading, setPropsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) return;
+    setPropsLoading(true);
+    publicAgentsService
+      .getProperties(id)
+      .then((data) => { setProperties(data); setPropsLoading(false); })
+      .catch(() => setPropsLoading(false));
+  }, [id]);
 
   if (agentLoading) return (
     <div className="max-w-5xl mx-auto px-4 py-12 text-center text-gray-400">Cargando...</div>
