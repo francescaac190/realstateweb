@@ -1,0 +1,508 @@
+{
+  "info": {
+    "name": "Century 21 API",
+    "description": "Full API collection for the Century 21 real estate backend. Set the `baseUrl` variable to `http://localhost:4000/api` and `accessToken` after logging in.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"5491112345678\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.accessToken) {",
+                  "  pm.collectionVariables.set('accessToken', json.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/refresh", "host": ["{{baseUrl}}"], "path": ["auth", "refresh"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"<your_refresh_token>\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/auth/logout", "host": ["{{baseUrl}}"], "path": ["auth", "logout"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"<your_refresh_token>\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/auth/change-password", "host": ["{{baseUrl}}"], "path": ["auth", "change-password"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"password123\",\n  \"newPassword\": \"newPassword456\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] }
+          }
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"phone\": \"5491112345678\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/users/:id", "host": ["{{baseUrl}}"], "path": ["users", ":id"], "variable": [{ "key": "id", "value": "<user_id>" }] }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"María\",\n  \"lastName\": \"García\",\n  \"email\": \"maria@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"5491198765432\",\n  \"roleId\": 1,\n  \"branchId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Update User by ID",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/users/:id", "host": ["{{baseUrl}}"], "path": ["users", ":id"], "variable": [{ "key": "id", "value": "<user_id>" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACTIVE\",\n  \"phone\": \"5491199999999\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete User by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/users/:id", "host": ["{{baseUrl}}"], "path": ["users", ":id"], "variable": [{ "key": "id", "value": "<user_id>" }] }
+          }
+        },
+        {
+          "name": "Get Agent Properties (public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id/properties",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id", "properties"],
+              "variable": [{ "key": "id", "value": "<user_id>" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "List Properties (public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/properties?cityId=1&typeId=1&statusId=1&isDraft=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties"],
+              "query": [
+                { "key": "cityId", "value": "1", "disabled": true },
+                { "key": "typeId", "value": "1", "disabled": true },
+                { "key": "statusId", "value": "1", "disabled": true },
+                { "key": "agentId", "value": "<agent_id>", "disabled": true },
+                { "key": "isDraft", "value": "false", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Property by ID (public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/properties/:id", "host": ["{{baseUrl}}"], "path": ["properties", ":id"], "variable": [{ "key": "id", "value": "<property_id>" }] }
+          }
+        },
+        {
+          "name": "Create Property",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/properties", "host": ["{{baseUrl}}"], "path": ["properties"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Casa en barrio cerrado", "type": "text" },
+                { "key": "description", "value": "Hermosa casa con jardín y piscina.", "type": "text" },
+                { "key": "typeId", "value": "1", "type": "text" },
+                { "key": "statusId", "value": "1", "type": "text" },
+                { "key": "currencyId", "value": "1", "type": "text" },
+                { "key": "totalPrice", "value": "250000", "type": "text" },
+                { "key": "pricePerM2", "value": "2500", "type": "text" },
+                { "key": "cityId", "value": "1", "type": "text" },
+                { "key": "zoneId", "value": "1", "type": "text" },
+                { "key": "address", "value": "Av. Siempre Viva 742", "type": "text" },
+                { "key": "areaM2", "value": "100", "type": "text" },
+                { "key": "builtAreaM2", "value": "80", "type": "text" },
+                { "key": "frontM2", "value": "10", "type": "text" },
+                { "key": "depthM2", "value": "10", "type": "text" },
+                { "key": "bedrooms", "value": "3", "type": "text" },
+                { "key": "bathrooms", "value": "2", "type": "text" },
+                { "key": "suites", "value": "1", "type": "text" },
+                { "key": "parking", "value": "1", "type": "text" },
+                { "key": "isDraft", "value": "true", "type": "text" },
+                { "key": "images", "type": "file", "src": [], "description": "One or more image files (jpeg, png, webp, gif). Max 10 MB each, up to 20 files." }
+              ]
+            },
+            "description": "Creates a property. Send as multipart/form-data. All numeric fields are sent as plain text strings — the backend coerces them. Attach image files under the key 'images'. Uploaded files are saved to disk and the property's media[] is populated automatically."
+          }
+        },
+        {
+          "name": "Update Property",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/properties/:id", "host": ["{{baseUrl}}"], "path": ["properties", ":id"], "variable": [{ "key": "id", "value": "<property_id>" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Casa actualizada\",\n  \"isDraft\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Property",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/properties/:id", "host": ["{{baseUrl}}"], "path": ["properties", ":id"], "variable": [{ "key": "id", "value": "<property_id>" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Media",
+      "item": [
+        {
+          "name": "Upload Images",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/media/upload", "host": ["{{baseUrl}}"], "path": ["media", "upload"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": [],
+                  "description": "One or more image files (jpeg, png, webp, gif). Max 10 MB each, up to 20 files."
+                }
+              ]
+            },
+            "description": "Upload image files. Returns { urls: string[] } with the public URLs. Use these URLs in the media[] array when creating or updating a property."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contacts",
+      "item": [
+        {
+          "name": "List Contacts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/contacts?agentId=<agent_id>",
+              "host": ["{{baseUrl}}"],
+              "path": ["contacts"],
+              "query": [{ "key": "agentId", "value": "<agent_id>", "disabled": true }]
+            }
+          }
+        },
+        {
+          "name": "Get Contact by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/contacts/:id", "host": ["{{baseUrl}}"], "path": ["contacts", ":id"], "variable": [{ "key": "id", "value": "<contact_id>" }] }
+          }
+        },
+        {
+          "name": "Create Contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/contacts", "host": ["{{baseUrl}}"], "path": ["contacts"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carlos López\",\n  \"phone\": \"5491155554444\",\n  \"email\": \"carlos@example.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Contact",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/contacts/:id", "host": ["{{baseUrl}}"], "path": ["contacts", ":id"], "variable": [{ "key": "id", "value": "<contact_id>" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"5491166667777\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Contact",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/contacts/:id", "host": ["{{baseUrl}}"], "path": ["contacts", ":id"], "variable": [{ "key": "id", "value": "<contact_id>" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Awards",
+      "item": [
+        {
+          "name": "List Awards",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/awards", "host": ["{{baseUrl}}"], "path": ["awards"] }
+          }
+        },
+        {
+          "name": "Get Award by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/awards/:id", "host": ["{{baseUrl}}"], "path": ["awards", ":id"], "variable": [{ "key": "id", "value": "<award_id>" }] }
+          }
+        },
+        {
+          "name": "Create Award",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/awards", "host": ["{{baseUrl}}"], "path": ["awards"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mejor Vendedor 2024\",\n  \"receivedAt\": \"2024-12-01T00:00:00.000Z\",\n  \"imageUrl\": \"http://localhost:4000/uploads/award.png\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Award",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/awards/:id", "host": ["{{baseUrl}}"], "path": ["awards", ":id"], "variable": [{ "key": "id", "value": "<award_id>" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mejor Vendedor 2025\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Award",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/awards/:id", "host": ["{{baseUrl}}"], "path": ["awards", ":id"], "variable": [{ "key": "id", "value": "<award_id>" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "item": [
+        {
+          "name": "Get Roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/catalog/roles", "host": ["{{baseUrl}}"], "path": ["catalog", "roles"] }
+          }
+        },
+        {
+          "name": "Get Currencies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/catalog/currencies", "host": ["{{baseUrl}}"], "path": ["catalog", "currencies"] }
+          }
+        },
+        {
+          "name": "Get Property Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/catalog/property-types", "host": ["{{baseUrl}}"], "path": ["catalog", "property-types"] }
+          }
+        },
+        {
+          "name": "Get Property Statuses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/catalog/property-statuses", "host": ["{{baseUrl}}"], "path": ["catalog", "property-statuses"] }
+          }
+        },
+        {
+          "name": "Get Cities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/catalog/cities", "host": ["{{baseUrl}}"], "path": ["catalog", "cities"] }
+          }
+        },
+        {
+          "name": "Get Zones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/zones?cityId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "zones"],
+              "query": [{ "key": "cityId", "value": "1", "description": "Filter zones by city ID" }]
+            }
+          }
+        },
+        {
+          "name": "Get Branches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/catalog/branches", "host": ["{{baseUrl}}"], "path": ["catalog", "branches"] }
+          }
+        }
+      ]
+    }
+  ]
+}

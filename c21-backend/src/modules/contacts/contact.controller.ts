@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from 'express';
-import * as contactService from './contact.service';
+import { NextFunction, Request, Response } from "express";
+import * as contactService from "./contact.service";
 
 function getUserId(req: Request, res: Response) {
   const userId = req.user?.id;
   if (!userId) {
-    res.status(401).json({ error: 'No autorizado.' });
+    res.status(401).json({ error: "No autorizado." });
     return null;
   }
   return userId;
@@ -17,9 +17,12 @@ export async function listContacts(
 ) {
   try {
     const userId = getUserId(req, res);
+    const agentId = req.query.agentId as string | undefined;
     if (!userId) return;
 
-    const contacts = await contactService.listContacts(userId);
+    const contacts = await contactService.listContacts(userId, {
+      agentId,
+    });
     res.status(200).json(contacts);
   } catch (err) {
     next(err as Error);
@@ -87,10 +90,7 @@ export async function deleteContact(
     const userId = getUserId(req, res);
     if (!userId) return;
 
-    const result = await contactService.deleteContact(
-      userId,
-      req.params.id,
-    );
+    const result = await contactService.deleteContact(userId, req.params.id);
     res.status(200).json(result);
   } catch (err) {
     next(err as Error);

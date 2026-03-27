@@ -4,6 +4,7 @@ import PrivateRoute from "./PrivateRoute";
 import AppLayout from "../../components/AppLayout";
 import Dashboard from "../../features/dashboard/pages/Dashboard";
 import PropertiesList from "../../features/properties/pages/PropertiesList";
+import CreatePropertyPage from "../../features/properties/pages/CreatePropertyPage";
 import ContactsList from "../../features/contacts/pages/ContactsList";
 import PublicLayout from "../../public/layout/PublicLayout";
 import HomePage from "../../public/pages/HomePage";
@@ -33,6 +34,7 @@ export default function AppRouter() {
           <Route element={<AppLayout />}>
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/properties" element={<PropertiesList />} />
+            <Route path="/admin/properties/new" element={<CreatePropertyPage />} />
             <Route path="/admin/contacts" element={<ContactsList />} />
           </Route>
         </Route>

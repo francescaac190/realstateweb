@@ -1,5 +1,5 @@
 import { apiClient } from "../../../lib/apiClient";
-import type { Property, PropertyFilters } from "../types/property.types";
+import type { Property, PropertyFilters, CreatePropertyPayload } from "../types/property.types";
 
 export const propertiesService = {
   getAll: (filters?: PropertyFilters): Promise<Property[]> =>
@@ -7,4 +7,7 @@ export const propertiesService = {
 
   getById: (id: string): Promise<Property> =>
     apiClient.get<Property>(`/properties/${id}`).then((r) => r.data),
+
+  create: (data: CreatePropertyPayload): Promise<Property> =>
+    apiClient.post<Property>("/properties", data).then((r) => r.data),
 };

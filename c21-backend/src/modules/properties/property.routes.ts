@@ -4,22 +4,23 @@ import {
   optionalAuthMiddleware,
 } from '../../middlewares/auth.middleware';
 import { validateBody } from '../../middlewares/validate.middleware';
+import { upload } from '../../middlewares/upload.middleware';
 import * as propertyController from './property.controller';
-import {
-  createPropertySchema,
-  updatePropertySchema,
-} from './property.schemas';
+import { updatePropertySchema } from './property.schemas';
 
 const router = Router();
 
 router.get('/', optionalAuthMiddleware, propertyController.listProperties);
 router.get('/:id', optionalAuthMiddleware, propertyController.getProperty);
+
+// Accepts multipart/form-data (fields + up to 20 image files under the key "images")
 router.post(
   '/',
   authMiddleware,
-  validateBody(createPropertySchema),
+  upload.array('images', 20),
   propertyController.createProperty,
 );
+
 router.patch(
   '/:id',
   authMiddleware,

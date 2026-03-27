@@ -57,6 +57,30 @@ export interface Property {
   media?: PropertyMedia[];
 }
 
+export interface CreatePropertyPayload {
+  title: string;
+  description?: string;
+  typeId?: number;
+  statusId?: number;
+  currencyId?: number;
+  totalPrice?: string;
+  pricePerM2?: number;
+  cityId?: number;
+  zoneId?: number;
+  address?: string;
+  areaM2?: number;
+  builtAreaM2?: number;
+  frontM2?: number;
+  depthM2?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  suites?: number;
+  parking?: number;
+  isDraft?: boolean;
+  agentId?: string;
+  media?: Array<{ type: "IMAGE" | "VIDEO"; url: string; order: number }>;
+}
+
 export interface PropertyFilters {
   cityId?: number;
   typeId?: number;

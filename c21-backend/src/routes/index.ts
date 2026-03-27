@@ -5,6 +5,7 @@ import propertyRoutes from '../modules/properties/property.routes';
 import contactRoutes from '../modules/contacts/contact.routes';
 import awardRoutes from '../modules/awards/award.routes';
 import catalogRoutes from '../modules/catalog/catalog.routes';
+import mediaRoutes from '../modules/media/media.routes';
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use('/properties', propertyRoutes);
 router.use('/contacts', contactRoutes);
 router.use('/awards', awardRoutes);
 router.use('/catalog', catalogRoutes);
+router.use('/media/upload', mediaRoutes);
 
 export default router;

@@ -105,9 +105,12 @@ export async function getAgentProperties(
   next: NextFunction,
 ) {
   try {
+    // Authenticated users viewing their own properties see all (including drafts).
+    // Public requests only see published properties.
+    const isOwner = req.user?.id === req.params.id;
     const properties = await propertyService.listProperties({
       agentId: req.params.id,
-      isDraft: false,
+      isDraft: isOwner ? undefined : false,
     });
     res.status(200).json(properties);
   } catch (err) {
