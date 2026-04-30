@@ -9,14 +9,15 @@ exports.signRefreshToken = signRefreshToken;
 exports.verifyAccessToken = verifyAccessToken;
 exports.verifyRefreshToken = verifyRefreshToken;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || JWT_SECRET;
-if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
+if (!process.env.JWT_SECRET) {
     throw new Error('JWT secrets are not configured.');
 }
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET;
 const ACCESS_TOKEN_TTL = process.env.ACCESS_TOKEN_TTL ?? '15m';
 const REFRESH_TOKEN_TTL_DAYS = Number(process.env.REFRESH_TOKEN_TTL_DAYS ?? 30);
-const REFRESH_TOKEN_TTL = process.env.REFRESH_TOKEN_TTL ?? `${REFRESH_TOKEN_TTL_DAYS}d`;
+const REFRESH_TOKEN_TTL = process.env.REFRESH_TOKEN_TTL ??
+    `${REFRESH_TOKEN_TTL_DAYS}d`;
 function signAccessToken(userId) {
     return jsonwebtoken_1.default.sign({ sub: userId, type: 'access' }, JWT_SECRET, {
         expiresIn: ACCESS_TOKEN_TTL,

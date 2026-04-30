@@ -10,5 +10,6 @@ function errorHandler(err, _req, res, _next) {
         });
         return;
     }
+    console.error('[Unhandled Error]', err);
     res.status(500).json({ error: 'Error interno del servidor.' });
 }

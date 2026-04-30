@@ -3,10 +3,10 @@ import { AppError } from "../../utils/errors";
 
 export async function listContacts(
   userId: string,
-  filters?: { agentId?: string },
+  _filters?: { agentId?: string },
 ) {
   return prisma.contact.findMany({
-    where: { userId, agentId: filters?.agentId },
+    where: { userId },
     orderBy: { createdAt: "desc" },
   });
 }

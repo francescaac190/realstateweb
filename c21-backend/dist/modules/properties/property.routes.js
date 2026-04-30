@@ -36,12 +36,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const auth_middleware_1 = require("../../middlewares/auth.middleware");
 const validate_middleware_1 = require("../../middlewares/validate.middleware");
+const upload_middleware_1 = require("../../middlewares/upload.middleware");
 const propertyController = __importStar(require("./property.controller"));
 const property_schemas_1 = require("./property.schemas");
 const router = (0, express_1.Router)();
 router.get('/', auth_middleware_1.optionalAuthMiddleware, propertyController.listProperties);
 router.get('/:id', auth_middleware_1.optionalAuthMiddleware, propertyController.getProperty);
-router.post('/', auth_middleware_1.authMiddleware, (0, validate_middleware_1.validateBody)(property_schemas_1.createPropertySchema), propertyController.createProperty);
+// Accepts multipart/form-data (fields + up to 20 image files under the key "images")
+router.post('/', auth_middleware_1.authMiddleware, upload_middleware_1.upload.array('images', 20), propertyController.createProperty);
 router.patch('/:id', auth_middleware_1.authMiddleware, (0, validate_middleware_1.validateBody)(property_schemas_1.updatePropertySchema), propertyController.updateProperty);
 router.delete('/:id', auth_middleware_1.authMiddleware, propertyController.deleteProperty);
 exports.default = router;

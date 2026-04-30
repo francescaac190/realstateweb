@@ -42,5 +42,6 @@ const router = (0, express_1.Router)();
 router.post('/register', (0, validate_middleware_1.validateBody)(auth_schemas_1.registerSchema), authController.register);
 router.post('/login', (0, validate_middleware_1.validateBody)(auth_schemas_1.loginSchema), authController.login);
 router.post('/refresh', (0, validate_middleware_1.validateBody)(auth_schemas_1.refreshSchema), authController.refresh);
+router.post('/logout', auth_middleware_1.authMiddleware, (0, validate_middleware_1.validateBody)(auth_schemas_1.logoutSchema), authController.logout);
 router.post('/change-password', auth_middleware_1.authMiddleware, (0, validate_middleware_1.validateBody)(auth_schemas_1.changePasswordSchema), authController.changePassword);
 exports.default = router;

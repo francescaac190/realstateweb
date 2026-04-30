@@ -1,7 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import path from 'path';
-
-const BASE_URL = process.env.BASE_URL ?? 'http://localhost:4000';
 
 export function uploadMedia(req: Request, res: Response, next: NextFunction) {
   try {
@@ -12,8 +9,11 @@ export function uploadMedia(req: Request, res: Response, next: NextFunction) {
       return;
     }
 
+    const baseUrl =
+      process.env.BASE_URL ?? `${req.protocol}://${req.get('host')}`;
+
     const urls = files.map(
-      (file) => `${BASE_URL}/uploads/${file.filename}`,
+      (file) => `${baseUrl}/uploads/${file.filename}`,
     );
 
     res.status(200).json({ urls });

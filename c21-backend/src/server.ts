@@ -7,14 +7,22 @@ import { errorHandler } from './middlewares/error.middleware';
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+const corsOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map((s) => s.trim())
+  : true;
 
-// Serve uploaded files as static assets
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use(cors({ origin: corsOrigins, credentials: true }));
+app.use(express.json({ limit: '10mb' }));
+
+const uploadsDir = process.env.UPLOADS_DIR ?? path.join(process.cwd(), 'uploads');
+app.use('/uploads', express.static(uploadsDir));
 
 app.get('/', (_req, res) => {
   res.send('API Century 21 funcionando.');
+});
+
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' });
 });
 
 app.use('/api', routes);

@@ -36,6 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = register;
 exports.login = login;
 exports.refresh = refresh;
+exports.logout = logout;
 exports.changePassword = changePassword;
 const authService = __importStar(require("./auth.service"));
 async function register(req, res, next) {
@@ -63,6 +64,21 @@ async function refresh(req, res, next) {
         const { refreshToken } = req.body;
         const result = await authService.refresh(refreshToken);
         res.status(200).json(result);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+async function logout(req, res, next) {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            res.status(401).json({ error: 'No autorizado.' });
+            return;
+        }
+        const { refreshToken } = req.body;
+        await authService.logout(userId, refreshToken);
+        res.status(200).json({ message: 'Sesión cerrada.' });
     }
     catch (err) {
         next(err);

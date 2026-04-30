@@ -10,6 +10,7 @@ const property_routes_1 = __importDefault(require("../modules/properties/propert
 const contact_routes_1 = __importDefault(require("../modules/contacts/contact.routes"));
 const award_routes_1 = __importDefault(require("../modules/awards/award.routes"));
 const catalog_routes_1 = __importDefault(require("../modules/catalog/catalog.routes"));
+const media_routes_1 = __importDefault(require("../modules/media/media.routes"));
 const router = (0, express_1.Router)();
 router.use('/auth', auth_routes_1.default);
 router.use('/users', user_routes_1.default);
@@ -17,4 +18,5 @@ router.use('/properties', property_routes_1.default);
 router.use('/contacts', contact_routes_1.default);
 router.use('/awards', award_routes_1.default);
 router.use('/catalog', catalog_routes_1.default);
+router.use('/media/upload', media_routes_1.default);
 exports.default = router;

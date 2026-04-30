@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = register;
 exports.login = login;
 exports.refresh = refresh;
+exports.logout = logout;
 exports.changePassword = changePassword;
 const crypto_1 = __importDefault(require("crypto"));
 const prisma_1 = require("../../config/prisma");
@@ -135,6 +136,17 @@ async function refresh(refreshToken) {
         data: { revokedAt: new Date() },
     });
     return issueTokens(stored.userId);
+}
+async function logout(userId, refreshToken) {
+    const tokenHash = hashToken(refreshToken);
+    const stored = await prisma_1.prisma.refreshToken.findUnique({ where: { tokenHash } });
+    if (!stored || stored.userId !== userId) {
+        throw new errors_1.AppError('Refresh token invalido.', 401);
+    }
+    await prisma_1.prisma.refreshToken.update({
+        where: { id: stored.id },
+        data: { revokedAt: new Date() },
+    });
 }
 async function changePassword(userId, currentPassword, newPassword) {
     const user = await prisma_1.prisma.user.findUnique({ where: { id: userId } });

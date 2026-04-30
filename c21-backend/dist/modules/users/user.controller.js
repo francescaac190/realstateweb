@@ -39,8 +39,10 @@ exports.createUser = createUser;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;
 exports.getProfile = getProfile;
+exports.getAgentProperties = getAgentProperties;
 exports.updateProfile = updateProfile;
 const userService = __importStar(require("./user.service"));
+const propertyService = __importStar(require("../properties/property.service"));
 function toNumber(value) {
     const parsed = Number(value);
     return Number.isNaN(parsed) ? undefined : parsed;
@@ -106,6 +108,21 @@ async function getProfile(req, res, next) {
         }
         const user = await userService.getUserById(userId);
         res.status(200).json(user);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+async function getAgentProperties(req, res, next) {
+    try {
+        // Authenticated users viewing their own properties see all (including drafts).
+        // Public requests only see published properties.
+        const isOwner = req.user?.id === req.params.id;
+        const properties = await propertyService.listProperties({
+            agentId: req.params.id,
+            isDraft: isOwner ? undefined : false,
+        });
+        res.status(200).json(properties);
     }
     catch (err) {
         next(err);

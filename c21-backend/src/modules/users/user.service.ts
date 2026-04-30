@@ -162,7 +162,7 @@ export async function updateUser(
     throw new AppError('Usuario no encontrado.', 404);
   }
 
-  const updateData: Prisma.UserUpdateInput = {
+  const updateData: Prisma.UserUncheckedUpdateInput = {
     firstName: data.firstName,
     lastName: data.lastName,
     phone: data.phone,

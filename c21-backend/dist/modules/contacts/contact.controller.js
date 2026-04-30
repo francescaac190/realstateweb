@@ -42,7 +42,7 @@ const contactService = __importStar(require("./contact.service"));
 function getUserId(req, res) {
     const userId = req.user?.id;
     if (!userId) {
-        res.status(401).json({ error: 'No autorizado.' });
+        res.status(401).json({ error: "No autorizado." });
         return null;
     }
     return userId;
@@ -50,9 +50,12 @@ function getUserId(req, res) {
 async function listContacts(req, res, next) {
     try {
         const userId = getUserId(req, res);
+        const agentId = req.query.agentId;
         if (!userId)
             return;
-        const contacts = await contactService.listContacts(userId);
+        const contacts = await contactService.listContacts(userId, {
+            agentId,
+        });
         res.status(200).json(contacts);
     }
     catch (err) {

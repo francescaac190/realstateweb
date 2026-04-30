@@ -7,10 +7,10 @@ exports.updateContact = updateContact;
 exports.deleteContact = deleteContact;
 const prisma_1 = require("../../config/prisma");
 const errors_1 = require("../../utils/errors");
-async function listContacts(userId) {
+async function listContacts(userId, _filters) {
     return prisma_1.prisma.contact.findMany({
         where: { userId },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
     });
 }
 async function getContact(userId, id) {
@@ -18,7 +18,7 @@ async function getContact(userId, id) {
         where: { id, userId },
     });
     if (!contact) {
-        throw new errors_1.AppError('Contacto no encontrado.', 404);
+        throw new errors_1.AppError("Contacto no encontrado.", 404);
     }
     return contact;
 }
@@ -37,7 +37,7 @@ async function updateContact(userId, id, data) {
         where: { id, userId },
     });
     if (!contact) {
-        throw new errors_1.AppError('Contacto no encontrado.', 404);
+        throw new errors_1.AppError("Contacto no encontrado.", 404);
     }
     return prisma_1.prisma.contact.update({
         where: { id },
@@ -53,8 +53,8 @@ async function deleteContact(userId, id) {
         where: { id, userId },
     });
     if (!contact) {
-        throw new errors_1.AppError('Contacto no encontrado.', 404);
+        throw new errors_1.AppError("Contacto no encontrado.", 404);
     }
     await prisma_1.prisma.contact.delete({ where: { id } });
-    return { message: 'Contacto eliminado.' };
+    return { message: "Contacto eliminado." };
 }

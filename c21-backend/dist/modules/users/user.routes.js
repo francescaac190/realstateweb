@@ -39,6 +39,8 @@ const validate_middleware_1 = require("../../middlewares/validate.middleware");
 const userController = __importStar(require("./user.controller"));
 const user_schemas_1 = require("./user.schemas");
 const router = (0, express_1.Router)();
+// Public — no auth required
+router.get('/:id/properties', auth_middleware_1.optionalAuthMiddleware, userController.getAgentProperties);
 router.use(auth_middleware_1.authMiddleware);
 router.get('/', userController.listUsers);
 router.get('/me', userController.getProfile);
