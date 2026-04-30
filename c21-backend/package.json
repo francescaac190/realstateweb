@@ -8,7 +8,7 @@
     "build": "prisma generate && tsc",
     "postinstall": "prisma generate",
     "start": "node dist/index.js",
-    "start:prod": "prisma migrate deploy && node dist/index.js",
+    "start:prod": "prisma migrate deploy && node dist/prisma/seed.js && node dist/index.js",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:deploy": "npx prisma migrate deploy",
     "prisma:studio": "npx prisma studio",
